@@ -61,13 +61,14 @@ class Screen:
     def selected(self):
         return self.rect.collidepoint(pygame.mouse.get_pos())
 
-    def update(self, selections):
+    def update(self, selections, window_focused):
         """ Must use keys() Flashing due to windows resetting selected values """
-        for selected in selections.keys():
-            if selected == self.index:
-                selections[selected] = True
-            else:
-                selections[selected] = False
+        if window_focused:
+            for selected in selections.keys():
+                if selected == self.index:
+                    selections[selected] = True
+                else:
+                    selections[selected] = False
 
 
     def draw(self, surface, self_surface, selections):
@@ -79,9 +80,9 @@ class Screen:
         surface.blit(self_surface, self.rect)
 
 
-def update_everything(screens, objects, positions, selected):
+def update_everything(screens, objects, positions, selected, window_focused):
     for screen in screens:
-        screen.update(selected)
+        screen.update(selected, window_focused)
     for obj in objects:
         obj.update(positions)
 
@@ -105,6 +106,7 @@ def draw_to_all_screens(window, screens, objects, positions, selections):
 def main(shared_screens, shared_objects, shared_positions, selected):
     window = pygame.display.set_mode(SIZE)
     clock = pygame.time.Clock()
+    window_focused = False  # Needs to be shared?
 
     while True:
         clock.tick(60)
@@ -112,8 +114,12 @@ def main(shared_screens, shared_objects, shared_positions, selected):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 quit()
+            elif event.type == pygame.WINDOWFOCUSGAINED:
+                window_focused = True
+            elif event.type == pygame.WINDOWFOCUSLOST:
+                window_focused = False
 
-        update_everything(shared_screens, shared_objects, shared_positions, selected)
+        update_everything(shared_screens, shared_objects, shared_positions, selected, window_focused)
         draw_to_all_screens(window, shared_screens, shared_objects, shared_positions, selected)
         pygame.display.update()
         pygame.display.set_caption(f"FPS: {clock.get_fps():.0f}")
