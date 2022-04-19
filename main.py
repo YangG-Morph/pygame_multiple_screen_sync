@@ -40,7 +40,6 @@ class Entity:
     def draw(self, surface, screen_position, self_surface, positions):
         offset = screen_position[0] + positions['player'][0], screen_position[1] + positions['player'][1]
         self.rect = self_surface.get_rect(center=offset)
-        self_surface.fill(self.surface['color'])
 
         surface.blit(self_surface, self.rect)
 
@@ -73,7 +72,6 @@ class Screen:
 
     def draw(self, surface, self_surface, selections):
         self.rect = self_surface.get_rect(topleft=self.position)
-        self_surface.fill(self.color)
         if selections[self.index]:
             rect = self_surface.get_rect()
             pygame.draw.rect(self_surface, 'white', rect, 10)
