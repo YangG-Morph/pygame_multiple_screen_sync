@@ -88,7 +88,7 @@ def update_everything(screens, objects, positions, selected, window_focused):
 
 def draw_to_all_screens(window, screens, objects, positions, selections):
     """ Recreate every surface in every window then blit
-        Can no longer blit to individual screens because they are destroyed when function ends
+        Can no longer blit to individual screens, they are destroyed when function ends
     """
     unpickled_screen_surfaces = [Pickler.unpickle_surface(screen.surface) for screen in screens]
     unpickled_object_surfaces = [Pickler.unpickle_surface(obj.surface) for obj in objects]
